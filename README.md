@@ -1,5 +1,4 @@
-# DSCI-522_nhl-game-predictor
-Model to predict win-loss in NHL games.
+# Predicting win/loss for NHL games using Supervised Learning
 
 ## Introduction
 NHL hockey games are notoriously difficult to predict. There is [common acceptance](https://www.nhlnumbers.com/2013/08/01/machine-learning-and-hockey-is-there-a-theoretical-limit-on-predictions) among hockey analytics enthusiasts that it is not possible to do better than 62% accuracy (i.e. 38% is due to luck). Interestingly, the NHL has recently [announced a partnership](https://www.nhl.com/news/nhl-mgm-resorts-sports-betting-partnership/c-301392322) with MGM Resorts to enable sports betting.

@@ -77,14 +77,16 @@ nhl_data_ready <- nhl_data_req %>%
          shots_ratio_prev1, shots_ratio_prev3, shots_ratio_prev5, shots_ratio_prev10, 
          goals_ratio_prev1, goals_ratio_prev3, goals_ratio_prev5, goals_ratio_prev10,
          won_prev1, won_prev3, won_prev5, won_prev10,
-         save_ratio_prev1, save_ratio_prev3, save_ratio_prev5, save_ratio_prev10)
+         save_ratio_prev1, save_ratio_prev3, save_ratio_prev5, save_ratio_prev10,
+         won = won.x)
 
 # adding opponent information
 nhl_data_ready <- nhl_data_ready %>% 
   left_join(nhl_data_ready, by = c("game_id" = "game_id")) %>% 
   filter(team_id.x != team_id.y) %>% 
   filter(team_id.x == team_of_interest) %>% 
-  group_by(season.x)
+  group_by(season.x) %>% 
+  select(-c(won.y, game_id, team_id.x, season.y))
 
 # creating training data
 nhl_data_train <- nhl_data_ready %>% 
@@ -95,6 +97,6 @@ nhl_data_test <- nhl_data_ready %>%
     filter(season.x == "2017")
 
 # writing the train and the test data to csv files
-write_csv(nhl_data_ready, output_file_train)
+write_csv(nhl_data_train, output_file_train)
 write_csv(nhl_data_test, output_file_test)
 

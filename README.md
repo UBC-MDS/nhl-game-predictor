@@ -6,7 +6,7 @@ NHL hockey games are notoriously difficult to predict. There is [common acceptan
 ## The Data
 The NHL has committed to providing detailed player tracking data starting next season, but in the meantime, we will see how accurate we can be with less granular data.
 
-Plenty of data is available publicly on the [NHL website](www.nhl.com), but we've managed to avoid scraping ourselves and obtained the data directly from [Martin Ellis on Kaggle](https://www.kaggle.com/martinellis/nhl-game-data).
+Plenty of data is available publicly on the [NHL website](https://www.nhl.com/), but we've managed to avoid scraping ourselves and obtained the data directly from [Martin Ellis on Kaggle](https://www.kaggle.com/martinellis/nhl-game-data).
 
 There are several tables of interest here, but we will initially be focussed on the `game_teams_stats.csv` table, which contains the following variables:
 - game_id

@@ -40,7 +40,7 @@ nhl_data_req <- nhl_data %>%
   group_by(season, reg_season) %>% 
   filter(reg_season == "02")
 
-# removing first half-played season
+# removing 2012 season as it is too long ago and was shortened by lockout
 nhl_data_req <- nhl_data_req %>% 
   left_join(nhl_data, by = c("game_id" = "game_id")) %>% 
   filter(team_id.x != team_id.y, season != "2012")
@@ -53,6 +53,8 @@ nhl_data_ready <- nhl_data_req %>%
          won_prev3 = rollapply(won.x, mean, align='right', fill=NA, width = list(-3:-1)),
          won_prev5 = rollapply(won.x, mean, align='right', fill=NA, width = list(-5:-1)),
          won_prev10 = rollapply(won.x, mean, align='right', fill=NA, width = list(-10:-1)),
+         
+         home_game = HoA.x=="home",
          
          shots_ratio = shots.x / (shots.x + shots.y),
          goals_ratio = goals.x / (goals.x + goals.y),
@@ -73,7 +75,7 @@ nhl_data_ready <- nhl_data_req %>%
          save_ratio_prev5 = rollapply(save_ratio, mean, align='right', fill=NA, width = list(-5:-1)),
          save_ratio_prev10 = rollapply(save_ratio, mean, align='right', fill=NA, width = list(-10:-1))) %>% 
   drop_na() %>% 
-  select(game_id, season, team_id = team_id.x, 
+  select(game_id, season, team_id = team_id.x, home_game,
          shots_ratio_prev1, shots_ratio_prev3, shots_ratio_prev5, shots_ratio_prev10, 
          goals_ratio_prev1, goals_ratio_prev3, goals_ratio_prev5, goals_ratio_prev10,
          won_prev1, won_prev3, won_prev5, won_prev10,
@@ -85,8 +87,27 @@ nhl_data_ready <- nhl_data_ready %>%
   left_join(nhl_data_ready, by = c("game_id" = "game_id")) %>% 
   filter(team_id.x != team_id.y) %>% 
   filter(team_id.x == team_of_interest) %>% 
+  mutate(won_prev1.diff = won_prev1.x - won_prev1.y,
+         won_prev3.diff = won_prev3.x - won_prev3.y,
+         won_prev5.diff = won_prev5.x - won_prev5.y,
+         won_prev10.diff = won_prev10.x - won_prev10.y,
+         
+         shots_ratio_prev1.diff = shots_ratio_prev1.x - shots_ratio_prev1.y,
+         shots_ratio_prev3.diff = shots_ratio_prev3.x - shots_ratio_prev3.y,
+         shots_ratio_prev5.diff = shots_ratio_prev5.x - shots_ratio_prev5.y,
+         shots_ratio_prev10.diff = shots_ratio_prev10.x - shots_ratio_prev10.y,
+         
+         goals_ratio_prev1.diff = goals_ratio_prev1.x - goals_ratio_prev1.y,
+         goals_ratio_prev3.diff = goals_ratio_prev3.x - goals_ratio_prev3.y,
+         goals_ratio_prev5.diff = goals_ratio_prev5.x - goals_ratio_prev5.y,
+         goals_ratio_prev10.diff = goals_ratio_prev10.x - goals_ratio_prev10.y,
+         
+         save_ratio_prev1.diff = save_ratio_prev1.x - save_ratio_prev1.y,
+         save_ratio_prev3.diff = save_ratio_prev3.x - save_ratio_prev3.y,
+         save_ratio_prev5.diff = save_ratio_prev5.x - save_ratio_prev5.y,
+         save_ratio_prev10.diff = save_ratio_prev10.x - save_ratio_prev10.y) %>% 
   group_by(season.x) %>% 
-  select(-c(won.y, game_id, team_id.x, season.y))
+  select(-c(won.y, team_id.x, season.y))
 
 # creating training data
 nhl_data_train <- nhl_data_ready %>% 

@@ -49,3 +49,42 @@ We can see in Figure 1 that when the Canucks are on the road they are far more l
 ![](../imgs/fig-2_shots-diff.jpg)
 
 We can see in Figure 1 that there isn't a huge difference in shot ratio difference as a predictor of wither the Canucks win or lose there next game, but there is a bit. Using only the previous 1 game appears to be slightly better than the others.
+
+The Model
+---------
+
+We looked at many different combinations of features and used 10-fold cross validation on our training data to choose features and hyperparameters. We also considered both a single decision tree model, and a random forest which should be a bit more robust.
+
+In the end, we included the top 12 features using the `feature_importances_` attribute in the `sklearn` decision tree. They are as follows (in descending order of importance): - `goals_ratio_prev10.x`
+- `goals_ratio_prev3.y`
+- `save_ratio_prev10.diff`
+- `shots_ratio_prev3.y`
+- `shots_ratio_prev3.x`
+- `shots_ratio_prev1.y`
+- `save_ratio_prev3.diff`
+- `shots_ratio_prev5.y`
+- `goals_ratio_prev5.x`
+- `goals_ratio_prev10.diff`
+- `team_id.y`
+- `goals_ratio_prev3.diff`
+Note: those ending in `.x` are for the Canucks, `.y` is their opponent, and `.diff` is the difference between the two.
+
+Testing out some different depths it is clear that we are overfitting if we go beyond depth 3 or 4 on a decision tree.
+
+![](results/max_depth.png)
+
+Looking at both decision trees and random forests ([full results here](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/results/model_selection.csv)), we get optimal depth of 2 on with cross validation accuracy of 55.2% on a decision tree and depth of 1 on a random forest with **cross validation accuracy of 58.8%**.
+
+So we go forward with the **depth 1 random forest** prediction model. (number of trees = 500)
+
+The Results
+-----------
+
+Re-training this model on the entire training set and then testing our prediction accuracy on the test set (2017-18 season), we get a **test accuracy of 60.6%** ([see here](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/results/final_result.csv)). This is a little surprising to have a better test accuracy than training, and we think it is due to some bias in the small test data (only 72 games). We need to do some more testing on other teams to be more confident in our model.
+
+In any case, the accuracy is not great but is close to the suggested 62% maximum. We are only using very basic data and came close to this mark, so if we perhaps were to look at which players are playing (e.g. injuries, backup goalie?) and whether each team had enough rest between games (back-to-backs are common and create some unfairness). Player tracking data could be especially helpful for predictions.
+
+References
+----------
+
+Data: <https://www.kaggle.com/martinellis/nhl-game-data> Lags and Moving Means in dplyr: <https://danieljhocking.wordpress.com/2014/12/03/lags-and-moving-means-in-dplyr/> 62% accuracy cap for NHL predictions: <https://www.nhlnumbers.com/2013/08/01/machine-learning-and-hockey-is-there-a-theoretical-limit-on-predictions>

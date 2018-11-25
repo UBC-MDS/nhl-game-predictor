@@ -33,9 +33,10 @@ feature_importance = pd.read_csv(features)
 train = pd.read_csv(train_data)
 test = pd.read_csv(test_data)
 
-features = feature_importance['features']
-#print(features)
-top_n_features = [i for i in features[:12]]
+features = feature_importance.sort_values(by = ['importance'], ascending = False)
+print(features)
+#importance_map =
+top_n_features = [i for i in features['features'][:12]]
 Xtrain = train.loc[:, top_n_features]
 Xtest = test.loc[:, top_n_features]
 ytrain = train['won.x']
@@ -101,7 +102,7 @@ def export_final_result(best_depth_rf, best_rf_accuracy):
 def main():
 
     best_depth_dt = np.argmax(select_model['scores_dt']) + 1
-    print("The best depth for decision tree is: {0}".format(best_depth_dt))
+    #print("The best depth for decision tree is: {0}".format(best_depth_dt))
     best_depth_rf = np.argmax(select_model['scores_rf']) + 1
     print("The best depth for random forest is: {0}".format(best_depth_rf))
 

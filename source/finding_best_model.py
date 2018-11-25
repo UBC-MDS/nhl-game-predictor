@@ -1,4 +1,14 @@
-# using decision trees to classify games into win/loss
+#!/usr/bin/env python3
+# building_model.py
+# Shayne, Aditya, Nov 2018
+#
+# This script finds the best parameters for the models
+# using decison trees and random forest algorithm and
+# exports the features and model selection info
+
+# Dependencies: argparse, pandas, numpy, graphviz, sklearn, matplotlib
+#
+# Usage: python3 source/finding_best_model.py data/train.csv data/test.csv results/
 
 # importing the required libraries
 import pandas as pd
@@ -9,8 +19,6 @@ from sklearn import tree
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 
-from sklearn.externals.six import StringIO
-from IPython.display import Image
 from sklearn.tree import export_graphviz
 # !pip install graphviz
 import graphviz
@@ -24,24 +32,25 @@ parser.add_argument('test_data')
 parser.add_argument('output_folder')
 args = parser.parse_args()
 
+# putting values from arguments into variables
 train_data = args.training_data
 test_data = args.test_data
 output_folder = args.output_folder
 
-#def read_train_test(train, test):
-    # reading the training and the test data
+# reading required files
 train = pd.read_csv(train_data)
 test = pd.read_csv(test_data)
-#return train, test
 
 def get_features():
-    # getting the relevant features to put into the model
+    ''' function to get the relevant features to put into the model
+    '''
     features = [f for f in train.columns.values if f not in 'won.x']
     return features
 
-
-# extracting the data based on the selected features
 def create_train_test_model(features):
+    '''
+    function to extract the data based on the selected features
+    '''
     Xtrain = train.loc[:, features]
     ytrain = train['won.x']
 
@@ -52,7 +61,10 @@ def create_train_test_model(features):
 
 
 def get_feature_importance(Xtrain, ytrain, features):
-    # building a decision tree with all features to see feature importance
+    '''
+    function to build a decision tree with all
+    features to see feature importance
+    '''
     model = tree.DecisionTreeClassifier(random_state = 1234)
     model.fit(Xtrain, ytrain)
     model.score(Xtrain, ytrain)
@@ -71,7 +83,6 @@ def tuning_max_depth_dt(depth, Xtrain, ytrain):
     '''
     Function to tune max_depth for a decision tree
     '''
-
     # building a decision tree classifier
     print("Current Depth: {0}".format(depth))
     model = tree.DecisionTreeClassifier(max_depth = depth, random_state = 1234)
@@ -85,8 +96,7 @@ def tuning_max_depth_rf(depth, Xtrain, ytrain):
     '''
     Function to tune max_depth for a decision tree
     '''
-
-    # building a decision tree classifier
+    # building a random forest classifier
     print("Current Depth: {0}".format(depth))
     model = RandomForestClassifier(max_depth = depth, random_state = 1234,
                                     n_estimators = 300, verbose = 1)
@@ -95,9 +105,10 @@ def tuning_max_depth_rf(depth, Xtrain, ytrain):
     curr_score = cross_val_score(model, Xtrain, ytrain, cv = 10)
     return np.mean(curr_score)
 
-# plotting and saving the variation of accuracy with max_depth
 def export_cross_valid_plot(depth_vals, validation_dt):
-
+    '''
+    plotting and saving the variation of accuracy with max_depth
+    '''
     plt.plot(depth_vals, validation_dt)
     plt.xlabel("max depth - hyperparameter")
     plt.ylabel("Accuracy")
@@ -106,13 +117,14 @@ def export_cross_valid_plot(depth_vals, validation_dt):
 
 
 def export_feature_importance(sorted_features):
-    # writing features with their importances in a data frameand exporting it
+    '''
+    writing features with their importances in a data frameand exporting it
+    '''
     feature_importance = pd.DataFrame(sorted_features, columns=['features', 'importance'])
     feature_importance.to_csv(output_folder + "feature_importance.csv")
 
 def main():
 
-    #train, test = read_train_test(train, test)
     features = get_features()
 
     # extracting the data based on the selected features
@@ -135,6 +147,7 @@ def main():
     for depth in depth_vals:
         validation_rf[depth - 1] = tuning_max_depth_rf(depth, Xtrain, ytrain)
 
+    # scoring the models on a large depth
     model = tree.DecisionTreeClassifier(max_depth = 25, random_state = 1234)
     score_depth_25_dt = tuning_max_depth_dt(25, Xtrain, ytrain)
     score_depth_25_rf = tuning_max_depth_rf(25, Xtrain, ytrain)
@@ -142,11 +155,12 @@ def main():
     print("Cross validation score with depth 25 on Decision Tree: {0}".format(score_depth_25_dt))
     print("Cross validation score with depth 25 on Random Forest: {0}".format(score_depth_25_rf))
 
+    # exporting model selection table
     select_model = pd.DataFrame({'depth' : np.arange(1,9), 'scores_dt' : validation_dt, 'scores_rf' : validation_rf})
     select_model.to_csv(output_folder + "model_selection.csv")
 
+    # exporting plot for CV and feature importance table
     export_cross_valid_plot(depth_vals, validation_dt)
-
     export_feature_importance(sorted_features)
 
 # call main function

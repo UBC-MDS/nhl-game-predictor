@@ -1,4 +1,13 @@
-# using decision trees to classify games into win/loss
+#!/usr/bin/env python3
+# building_model.py
+# Shayne, Aditya, Nov 2018
+#
+# This script builds the final model on the data using
+# the exported information from finding_best_model.py
+
+# Dependencies: argparse, pandas, numpy, graphviz, sklearn, matplotlib
+#
+# Usage: python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
 
 # importing the required libraries
 import pandas as pd
@@ -21,22 +30,24 @@ parser.add_argument('output_folder')
 parser.add_argument('imp_features')
 args = parser.parse_args()
 
+# putting values from arguments into variables
 model_select = args.model_select
 train_data = args.training_data
 test_data = args.test_data
 output_folder = args.output_folder
 features = args.imp_features
 
-
+# reading requored files
 select_model = pd.read_csv(model_select)
 feature_importance = pd.read_csv(features)
 train = pd.read_csv(train_data)
 test = pd.read_csv(test_data)
 
+# extracting the features to be used in the final model
 features = feature_importance.sort_values(by = ['importance'], ascending = False)
-print(features)
-#importance_map =
 top_n_features = [i for i in features['features'][:12]]
+
+# subsetting the train and test data with relevant features
 Xtrain = train.loc[:, top_n_features]
 Xtest = test.loc[:, top_n_features]
 ytrain = train['won.x']
@@ -44,7 +55,9 @@ ytest = test['won.x']
 
 
 def build_final_model_dt(best_depth):
-
+    '''
+    function to build final model using a decision tree
+    '''
     # fitting the final model using a random forest with n_estimators = 500 and max_depth = best depth
     final_model = tree.DecisionTreeClassifier(max_depth = best_depth, random_state = 1234)
     final_model.fit(Xtrain, ytrain)
@@ -61,7 +74,9 @@ def build_final_model_dt(best_depth):
 
 
 def build_final_model_rf(best_depth):
-
+    '''
+    function to build final model using a randomc forest
+    '''
     # fitting the final model using a random forest with n_estimators = 500 and max_depth = best depth
     final_model = RandomForestClassifier(n_estimators = 500, max_depth = best_depth, random_state = 1234)
     final_model.fit(Xtrain, ytrain)
@@ -93,7 +108,9 @@ def save_and_show_decision_tree(model,
 
 
 def export_final_result(best_depth_rf, best_rf_accuracy):
-
+    '''
+    function to export final table of summary
+    '''
     result = pd.DataFrame({'depth' : [best_depth_rf],
                             'algorithm' : ['RandomForest'],
                             'accuracy' : [best_rf_accuracy]})
@@ -106,9 +123,11 @@ def main():
     best_depth_rf = np.argmax(select_model['scores_rf']) + 1
     print("The best depth for random forest is: {0}".format(best_depth_rf))
 
+    # building final models
     best_dt_accuracy = build_final_model_dt(best_depth_dt)
     best_rf_accuracy = build_final_model_rf(best_depth_rf)
 
+    # exporting final model using random forest
     export_final_result(best_depth_rf, best_rf_accuracy)
 
 

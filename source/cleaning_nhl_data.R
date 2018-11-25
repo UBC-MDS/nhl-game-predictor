@@ -6,7 +6,6 @@
 # The script takes an input file and names of output train and test file as arguments
 # The specific team for which the analysis is being done needs to be provided  as the last arguement
 # Usage: Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv 23
-# R script for reading and cleaning data from game_teams_stats.csv file
 
 # loading the required libraries
 library(tidyverse)

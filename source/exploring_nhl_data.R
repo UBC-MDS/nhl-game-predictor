@@ -81,17 +81,18 @@ generate_plot_row <- function(data) {
 
 # function to generate a single density plot for a given variable 
 generate_plot_numerical <- function(data, title) {
-
+  
   x_min = min(data[2])
   x_max = max(data[2])
   
   data %>% 
     ggplot(aes(x = x)) +
-      geom_density(bw=0.2, aes(group=won, colour=won), show.legend=F) +
-      xlim(x_min, x_max) +
-      labs(x=x_lab,y="", caption=title) +
-      theme_minimal()
+    geom_density(bw=0.2, aes(group=won, colour=won), show.legend=F) +
+    xlim(x_min, x_max) +
+    labs(x=x_lab,y="", caption=title) +
+    theme_minimal()
 }
 
 # call main function
 main()
+  

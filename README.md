@@ -18,7 +18,7 @@ Here is **[the report](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/bl
 2. Run the following commands:
 
 ```
-Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv 23
+Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv data/team_id.txt
 Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-1_home-away.jpg home_game.x "Canucks Home Game?" TRUE "Figure 1: Impact of game location - home or away"
 Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-2_shots-diff.jpg shots_ratio_prev1.diff "" FALSE "Figure 2: Difference of moving average shots ratio between Canucks and opponent"
 python3 source/finding_best_model.py data/train.csv data/test.csv results/
@@ -26,7 +26,7 @@ python3 source/building_model.py results/model_selection.csv data/train.csv data
 Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 ```
 
-## Dependancies
+## Dependencies
 - R & R libraries:
     - `tidyverse`
     - `rmarkdown`

@@ -11,6 +11,14 @@ At this stage the model is focused on the smaller subquestion of predicting game
 
 Here is **[the report](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/doc/results_report.md)** from our initial model build which uses machine learning decision trees and random forests.
 
+The main variables we use in this model are as follows:  
+- Did the team of interest win the game? (won column, TRUE/FALSE)  
+- Home or Away game? (HoA column, home/away)  
+- Who is the opponent? (team_id column, 1-31)  
+- What proportion of *goals* were scored by the team of interest? (calculated using goals column for both teams, 0-1)  
+- What proportion of *shots* were made by the team of interest? (calculated using shots column for both teams, 0-1)  
+- What proportion of *shots* were *saved* by the team of interest? (calculated using goals and shots columns, 0-1)  
+
 ## Usage
 
 1. Clone this repo, and using the command line, navigate to the root of this project.

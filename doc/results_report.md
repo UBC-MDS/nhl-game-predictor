@@ -67,11 +67,12 @@ In the end, we included the top 12 features using the `feature_importances_` att
 - `goals_ratio_prev10.diff`
 - `team_id.y`
 - `goals_ratio_prev3.diff`
+
 Note: those ending in `.x` are for the Canucks, `.y` is their opponent, and `.diff` is the difference between the two.
 
 Testing out some different depths it is clear that we are overfitting if we go beyond depth 3 or 4 on a decision tree.
 
-![](results/max_depth.png)
+![](../results/max_depth.png)
 
 Looking at both decision trees and random forests ([full results here](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/results/model_selection.csv)), we get optimal depth of 2 on with cross validation accuracy of 55.2% on a decision tree and depth of 1 on a random forest with **cross validation accuracy of 58.8%**.
 

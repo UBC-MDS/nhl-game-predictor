@@ -50,9 +50,10 @@ generate_plot_categorical <- function(data) {
   plot_data %>% 
     ggplot(aes(x = x, y = won)) +
     geom_bin2d() +
+    stat_bin2d(geom = "text", aes(label = ..count..)) +
+    scale_fill_gradient(low='gray', high='red') +
     labs(x=x_lab, y="Did Canucks win?",
-         title = fig_title,
-         subtitle = "Lighter blue indicates that this happens more often, darker less") +
+         title = fig_title) +
     guides(fill = FALSE)  +
     theme_minimal()
   ggsave(output_file)

@@ -26,7 +26,8 @@ Plenty of data is available publicly on the [NHL website](www.nhl.com), but we'v
 
 Notably, this data includes all games starting with the 2012-13 season through the end of the 2017-18 season. We've excluded the 2012-13 season from the model for two reasons: 1) this was a lockout-shortened season, and 2) it is older data and not as relevant for future predictions. Alse we exclude playoff and pre-season games and use only the regular season.
 
-There are several tables of interest, but we have focused exclusively on `game_teams_stats.csv`, with the following key variables driving our prediction: - Did the team of interest win the game? (won column, TRUE/FALSE)
+There are several tables of interest, but we have focused exclusively on `game_teams_stats.csv`, with the following key variables driving our prediction:
+- Did the team of interest win the game? (won column, TRUE/FALSE)
 - Home or Away game? (HoA column, home/away)
 - Who is the opponent? (team\_id column, 1-31)
 - What proportion of *goals* were scored by the team of interest? (calculated using goals column for both teams, 0-1)
@@ -46,16 +47,17 @@ Some observations about our data (specifically on the training data):
 </center>
 We can see in Figure 1 that when the Canucks are on the road they are far more likely to lose the game. This makes sense and supports the commonly accepted idea of "home ice advantage".
 
-![](../imgs/fig-2_shots-diff.jpg)
+<br> ![](../imgs/fig-2_shots-diff.jpg)
 
-We can see in Figure 1 that there isn't a huge difference in shot ratio difference as a predictor of wither the Canucks win or lose there next game, but there is a bit. Using only the previous 1 game appears to be slightly better than the others.
+We can see in Figure 2 that there isn't a huge difference in shot ratio difference as a predictor of wither the Canucks win or lose there next game, but there is a bit. Using only the previous 1 game appears to be slightly better than the others.
 
 The Model
 ---------
 
 We looked at many different combinations of features and used 10-fold cross validation on our training data to choose features and hyperparameters. We also considered both a single decision tree model, and a random forest which should be a bit more robust.
 
-In the end, we included the top 12 features using the `feature_importances_` attribute in the `sklearn` decision tree. They are as follows (in descending order of importance): - `goals_ratio_prev10.x`
+In the end, we included the top 12 features using the `feature_importances_` attribute in the `sklearn` decision tree. They are as follows (in descending order of importance):
+- `goals_ratio_prev10.x`
 - `goals_ratio_prev3.y`
 - `save_ratio_prev10.diff`
 - `shots_ratio_prev3.y`
@@ -88,4 +90,6 @@ In any case, the accuracy is not great but is close to the suggested 62% maximum
 References
 ----------
 
-Data: <https://www.kaggle.com/martinellis/nhl-game-data> Lags and Moving Means in dplyr: <https://danieljhocking.wordpress.com/2014/12/03/lags-and-moving-means-in-dplyr/> 62% accuracy cap for NHL predictions: <https://www.nhlnumbers.com/2013/08/01/machine-learning-and-hockey-is-there-a-theoretical-limit-on-predictions>
+Data: <https://www.kaggle.com/martinellis/nhl-game-data>
+Lags and Moving Means in dplyr: <https://danieljhocking.wordpress.com/2014/12/03/lags-and-moving-means-in-dplyr/>
+62% accuracy cap for NHL predictions: <https://www.nhlnumbers.com/2013/08/01/machine-learning-and-hockey-is-there-a-theoretical-limit-on-predictions>

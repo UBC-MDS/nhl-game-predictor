@@ -1,5 +1,7 @@
 # Predicting win/loss for NHL games using Supervised Learning
 
+<center><img src = "http://media.contentapi.ea.com/content/www-easports/en_US/nhl/news/2018/nhl-19-features-real-motion-tech-skating/_jcr_content/imageShare.img.jpg"></center>
+
 ### Contributors
 
 - [Shayne Andrews](https://github.com/shayne-andrews)
@@ -38,6 +40,47 @@ python3 source/finding_best_model.py data/train.csv data/test.csv results/
 python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
 Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 ```
+
+3. Using the [Makefile](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/Makefile) to run the whole pipeline:
+
+  - Clone this repository and then navigate to the root directory and run the following commands:
+
+```bash
+make clean # to clean up existing files and pre-existing results/images
+make all # to run all the scripts and create fresh results and output
+```
+The description of the files and the make commands is provided below as well as in the [Makefile](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/Makefile).
+
+```bash
+#################################
+# Steps involved in the analysis
+#################################
+
+# Step 1: Cleans the data and creates train and test datasets
+data/train.csv data/test.csv : source/cleaning_nhl_data.R data/game_teams_stats.csv data/team_id.txt
+	Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv data/team_id.txt
+
+# Step 2: EDA along with creating relavent graph using data generated frmo step 1
+imgs/fig-1_home-away.jpg : source/exploring_nhl_data.R data/train.csv
+	Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-1_home-away.jpg home_game.x "Canucks Home Game?" TRUE "Figure 1: Impact of game location - home or away"
+
+# Step 3: EDA along with creating relavent graph using data generated frmo step 1
+imgs/fig-2_shots-diff.jpg : source/exploring_nhl_data.R data/train.csv
+	Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-2_shots-diff.jpg shots_ratio_prev1.diff "" FALSE "Figure 2: Difference of moving average shots ratio between Canucks and opponent"
+
+# Step 4: Uses data created from step 1 to generate model selection table and feature importances using cross validation
+results/model_selection.csv results/feature_importance.csv results/max_depth.png : source/finding_best_model.py data/train.csv data/test.csv
+	python3 source/finding_best_model.py data/train.csv data/test.csv results/
+
+# Step 5: Uses the output from step 4 to build the final model using top 12 features and generate the final results
+results/final_result.csv results/dtree results/dtree.pdf : source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/feature_importance.csv
+	python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
+
+# Step 6: creating the markdown report file using the output from all the above steps
+doc/results_report.md : doc/results_report.Rmd data/train.csv data/test.csv imgs/fig-1_home-away.jpg imgs/fig-2_shots-diff.jpg results/model_selection.csv results/feature_importance.csv results/max_depth.png results/final_result.csv results/dtree results/dtree.pdf
+	Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
+```
+
 
 ## Dependencies
 - R & R libraries:

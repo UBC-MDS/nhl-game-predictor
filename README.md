@@ -88,6 +88,8 @@ doc/results_report.md : doc/results_report.Rmd data/train.csv data/test.csv imgs
     - `rmarkdown`
     - `knitr`
     - `here`
+    - `zoo`
+    - `gridExtra`
 - Python & Python libraries:
     - `matplotlib`
     - `numpy`

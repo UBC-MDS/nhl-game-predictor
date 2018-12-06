@@ -28,20 +28,31 @@ The main variables we use in this model are as follows:
 
 ## Usage
 
-1. Clone this repo, and using the command line, navigate to the root of this project.
+#### Using Docker
 
-2. Run the following commands:
-
+1. Install [Docker](https://www.docker.com/get-started).
+2. Download and clone this repository.
+3. Run the following code in terminal to download the Docker image:
 ```
-Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv data/team_id.txt
-Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-1_home-away.jpg home_game.x "Canucks Home Game?" TRUE "Figure 1: Impact of game location - home or away"
-Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-2_shots-diff.jpg shots_ratio_prev1.diff "" FALSE "Figure 2: Difference of moving average shots ratio between Canucks and opponent"
-python3 source/finding_best_model.py data/train.csv data/test.csv results/
-python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
-Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
+docker pull adityashrm21/dsci-522_nhl-game-predictor
 ```
 
-3. Using the [Makefile](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/Makefile) to run the whole pipeline:
+4. Use the command line to navigate to the root of this repo.
+5. Type the following code into terminal to run the analysis (filling in PATH_ON_YOUR_COMPUTER with the absolute path to the root of this project on your computer):
+
+```
+docker run --rm -it -e PASSWORD=nhlprediction -v <PATH_ON_YOUR_COMPUTER>:/home/nhl/nhl-game-predictor adityashrm21/dsci-522_nhl-game-predictor:latest make -C "/home/nhl/nhl-game-predictor" all
+```
+
+6. If you would like a fresh start, type the following:
+
+```
+docker run --rm -it -e PASSWORD=nhlprediction -v <PATH_ON_YOUR_COMPUTER>:/home/nhl/nhl-game-predictor adityashrm21/dsci-522_nhl-game-predictor:latest make -C "/home/nhl/nhl-game-predictor" clean
+```
+
+#### Using make command
+
+Use [Makefile](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/Makefile) to run the whole pipeline:
 
   - Clone this repository and then navigate to the root directory and run the following commands:
 
@@ -80,7 +91,20 @@ results/final_result.csv results/dtree results/dtree.pdf : source/building_model
 doc/results_report.md : doc/results_report.Rmd data/train.csv data/test.csv imgs/fig-1_home-away.jpg imgs/fig-2_shots-diff.jpg results/model_selection.csv results/feature_importance.csv results/max_depth.png results/final_result.csv results/dtree results/dtree.pdf
 	Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 ```
+#### Running scripts manually
 
+- Clone this repo, and using the command line, navigate to the root of this project.
+
+- Run the following commands:
+
+```
+Rscript source/cleaning_nhl_data.R data/game_teams_stats.csv data/train.csv data/test.csv data/team_id.txt
+Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-1_home-away.jpg home_game.x "Canucks Home Game?" TRUE "Figure 1: Impact of game location - home or away"
+Rscript source/exploring_nhl_data.R data/train.csv imgs/fig-2_shots-diff.jpg shots_ratio_prev1.diff "" FALSE "Figure 2: Difference of moving average shots ratio between Canucks and opponent"
+python3 source/finding_best_model.py data/train.csv data/test.csv results/
+python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
+Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
+```
 
 ## Dependencies
 - R & R libraries:

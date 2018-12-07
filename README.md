@@ -14,7 +14,7 @@ NHL hockey games are notoriously difficult to predict. There is [common acceptan
 
 At this stage the model is focused on the smaller subquestion of predicting games for **only the Vancouver Canucks**.
 
-## Initial Model
+## Model Description
 
 Here is **[the report](https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/doc/results_report.md)** from our initial model build which uses machine learning decision trees and random forests.
 
@@ -105,6 +105,12 @@ python3 source/finding_best_model.py data/train.csv data/test.csv results/
 python3 source/building_model.py results/model_selection.csv data/train.csv data/test.csv results/ results/feature_importance.csv
 Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 ```
+
+## Makefile dependency graph
+
+<br>
+<center><img src = "https://github.com/UBC-MDS/DSCI-522_nhl-game-predictor/blob/master/imgs/Makefile.png?raw=True"></center>
+<br>
 
 ## Dependencies
 - R & R libraries:

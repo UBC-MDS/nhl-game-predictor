@@ -1,10 +1,9 @@
 # Docker file for nhl-game-prediction
 # Aditya Sharma, Shayne Andrews (Dec 06, 2018)
 
-# Usage:
-#   To build the docker image: docker build --tag nhl-game-predictor:0.1 .
-#		To create the report:
-#		To get a clean start:
+# Purpose:
+# This docker file installs all the required software to
+# run the analysis from top to bottom and produce the results.
 
 # Use rocker/tidyverse as the base image
 FROM rocker/tidyverse
@@ -24,7 +23,6 @@ RUN Rscript -e "install.packages('tidyverse')"
 RUN Rscript -e "install.packages('gridExtra')"
 
 # Installing makefile2graphpackages
-
 # get OS updates and install build tools
 RUN apt-get update
 RUN apt-get install -y build-essential

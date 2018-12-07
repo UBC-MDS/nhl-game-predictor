@@ -15,7 +15,7 @@
 # - hyperparameter tuning and cross-validation and finding feature importance
 # - fitting the final model
 # - creating the report for the analysis
-all : doc/results_report.md
+all : doc/results_report.md Makefile.png
 
 #################################
 # Steps involved in the analysis
@@ -45,6 +45,10 @@ results/final_result.csv results/dtree results/dtree.pdf : source/building_model
 doc/results_report.md : doc/results_report.Rmd data/train.csv data/test.csv imgs/fig-1_home-away.jpg imgs/fig-2_shots-diff.jpg results/model_selection.csv results/feature_importance.csv results/max_depth.png results/final_result.csv results/dtree results/dtree.pdf
 	Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 
+Makefile.png : Makefile
+	makefile2graph > Makefile.dot
+	dot -Tpng Makefile.dot -o Makefile.png
+
 ###########################
 # Remove all files
 ###########################
@@ -63,3 +67,5 @@ clean :
 	rm -f doc/results_report.md
 	rm -f doc/results_report.html
 	rm -f Rplots.pdf
+	rm -f Makefile.dot
+	rm -f Makefile.png

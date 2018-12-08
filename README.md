@@ -113,17 +113,24 @@ Rscript -e "rmarkdown::render('doc/results_report.Rmd')"
 <br>
 
 ## Dependencies
-- R & R libraries:
-    - `tidyverse`
-    - `rmarkdown`
-    - `knitr`
-    - `here`
-    - `zoo`
-    - `gridExtra`
+- R (3.5.1) & R libraries:
+
+| Package   | Version  |
+| :------------- | :------------- |
+| `knitr`       | 1.20   |
+| `tidyverse`   |  1.2.1 |
+|  `rmarkdown` | 1.10  |
+|`here`   | 0.1  |
+|`zoo`   | 1.8.4  |
+|`gridExtra`   |  2.3 |
+
 - Python & Python libraries:
-    - `matplotlib`
-    - `numpy`
-    - `pandas`
-    - `sklearn`
-    - `argparse`
-    - `graphviz`
+
+| Package   | Version  |
+| :------------- | :------------- |
+| `matplotlib`       | 2.2.2 |
+| `numpy`   |  1.14.3 |
+|  `pandas` | 0.23.0  |
+|`sklearn`   |  0.19.1 |
+|`argparse`   |  1.4.0 |
+|`graphviz`   | 0.10.1  |
